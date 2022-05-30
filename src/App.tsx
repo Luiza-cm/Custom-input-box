@@ -1,24 +1,28 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React, {useEffect, useState} from 'react';
+import SelectSearchBox from './components/InputSelect';
+import './assets/styles/global.css';
+import axios from 'axios';
 
 function App() {
+  const [data, setData] = useState([])
+  useEffect(()=>{
+    axios.get('http://localhost:3030/').then(response => {
+      setData(response.data)
+    })
+  },[])
+  function search(text: string){
+    axios.get(`http://localhost:3030/search?search_field=${text}`).then(response =>{
+      setData(response.data)
+    })
+  }
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div id="select-container">
+      <h1>Caixa de entrada/seleção customizada</h1>
+      <SelectSearchBox 
+        onInputChange={search}
+        data={data}
+        label='Fornecedor'
+      />
     </div>
   );
 }
